@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="theme-color" content="#0D0D0D"/>
+<title>Feminine Physique Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700;900&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet"/>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  body{background:#0D0D0D;color:#fff;font-family:'DM Sans','Helvetica Neue',sans-serif;max-width:480px;margin:0 auto;min-height:100vh;overflow-x:hidden;}
+  ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:#111}::-webkit-scrollbar-thumb{background:#333;border-radius:2px}
+  input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{-webkit-appearance:none}
+  input[type=number]{-moz-appearance:textfield}
+  .screen{display:none;animation:slideUp 0.3s ease;}
+  .screen.active{display:block;}
+  @keyframes slideUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
+  .btn-pink{background:#E91E8C;color:#fff;border:none;border-radius:14px;padding:16px 28px;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;width:100%;letter-spacing:.5px;transition:transform .1s,opacity .1s;}
+  .btn-pink:active{transform:scale(.97);opacity:.9}
+  .btn-ghost{background:transparent;color:#888;border:1px solid #333;border-radius:14px;padding:13px 20px;font-size:14px;cursor:pointer;font-family:inherit;transition:border-color .2s;flex:1;}
+  .btn-ghost:active{border-color:#E91E8C;color:#fff}
+  .inp{background:#252525;border:1.5px solid #333;border-radius:10px;color:#fff;font-size:16px;font-weight:700;text-align:center;padding:10px 4px;font-family:inherit;outline:none;transition:border-color .2s;flex:1;}
+  .inp:focus{border-color:#E91E8C}
+  .done-btn{width:38px;height:38px;border-radius:50%;border:2px solid #444;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;transition:all .15s;flex-shrink:0;}
+  .done-btn.checked{background:#E91E8C;border-color:#E91E8C;color:#fff}
+  .set-row{transition:opacity .2s;}
+  .set-row.done-row{opacity:.4}
+  .ex-tab{padding:8px 14px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;border:1px solid #2a2a2a;background:#1a1a1a;color:#888;font-family:inherit;white-space:nowrap;transition:all .15s;}
+  .ex-tab.active{border:none;color:#fff;}
+  .ex-tab.started{border-color:rgba(233,30,140,.4)}
+  .ex-tab.completed{color:#444;text-decoration:line-through}
+  .day-card{background:#1A1A1A;border:1px solid #2a2a2a;border-radius:20px;padding:20px 22px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:16px;transition:border-color .2s,transform .15s;font-family:inherit;width:100%;}
+  .day-card:active{transform:scale(.98)}
+  .type-badge{padding:3px 10px;border-radius:20px;font-size:10px;font-weight:800;letter-spacing:1px;}
+  .pulse{animation:pulse 1s ease-in-out infinite}
+  .tabs-scroll{display:flex;gap:8px;overflow-x:auto;padding:16px 24px 4px;scrollbar-width:none;}
+  .tabs-scroll::-webkit-scrollbar{display:none}
+  .serif{font-family:'DM Serif Display',serif}
+</style>
+</head>
+<body>
+<!-- HOME -->
+<div id="home" class="screen active" style="padding:48px 24px 40px">
+  <div style="margin-bottom:36px">
+    <div class="serif" style="font-size:40px;line-height:1.1;margin-bottom:8px">Feminine<br><span style="color:#E91E8C;font-style:italic">Physique</span></div>
+    <div style="color:#888;font-size:14px">4-Day Concurrent Training Split</div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:32px" id="day-list"></div>
+  <div style="padding:18px;background:#111;border-radius:16px;border-left:3px solid #E91E8C">
+    <div style="font-size:11px;font-weight:700;color:#E91E8C;letter-spacing:1.5px;margin-bottom:10px">CONCURRENT TRAINING</div>
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div style="display:flex;align-items:center;gap:8px"><div style="width:8px;height:8px;border-radius:50%;background:#E91E8C;flex-shrink:0"></div><span style="font-size:12px;color:#888">HEAVY compounds — 6–8 reps (hip thrust, squats, deadlifts, rows)</span></div>
+      <div style="display:flex;align-items:center;gap:8px"><div style="width:8px;height:8px;border-radius:50%;background:#FF6B9D;flex-shrink:0"></div><span style="font-size:12px;color:#888">MODERATE isolation — 10–12 reps</span></div>
+      <div style="display:flex;align-items:center;gap:8px"><div style="width:8px;height:8px;border-radius:50%;background:#FFB3D1;flex-shrink:0"></div><span style="font-size:12px;color:#888">LIGHT finishers — 15–20 reps</span></div>
+    </div>
+  </div>
+</div>
+<!-- WARMUP -->
+<div id="warmup" class="screen" style="padding:48px 24px 40px">
+  <button class="btn-ghost" style="width:auto;margin-bottom:28px;padding:8px 16px" onclick="showScreen('home')">← Back</button>
+  <div id="wu-tag" style="font-size:11px;font-weight:700;letter-spacing:1.5px;margin-bottom:6px"></div>
+  <div class="serif" id="wu-title" style="font-size:30px;margin-bottom:6px"></div>
+  <div style="color:#888;font-size:14px;margin-bottom:32px">Activate before you lift 🔥</div>
+  <div id="wu-list" style="display:flex;flex-direction:column;gap:10px;margin-bottom:36px"></div>
+  <button class="btn-pink" onclick="startWorkout()">Start Workout →</button>
+</div>
+<!-- WORKOUT -->
+<div id="workout" class="screen">
+  <div style="position:sticky;top:0;z-index:10;background:#0D0D0D;padding:44px 24px 12px;border-bottom:1px solid #1a1a1a">
+    <button class="btn-ghost" style="width:auto;padding:6px 14px;font-size:13px;margin-bottom:14px" onclick="showScreen('home')">← Exit</button>
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
+      <div>
+        <div id="wk-tag" style="font-size:11px;font-weight:700;letter-spacing:1.5px;margin-bottom:4px"></div>
+        <div class="serif" id="wk-title" style="font-size:24px"></div>
+      </div>
+      <div style="text-align:right">
+        <div id="wk-progress-label" style="font-size:22px;font-weight:900;color:#E91E8C"></div>
+        <div style="font-size:11px;color:#888">sets done</div>
+      </div>
+    </div>
+    <div style="height:4px;background:#222;border-radius:2px;overflow:hidden">
+      <div id="progress-bar" style="height:100%;width:0%;background:#E91E8C;border-radius:2px;transition:width .4s ease"></div>
+    </div>
+  </div>
+  <div id="rest-timer" style="display:none;margin:12px 24px 0;padding:12px 20px;background:#1a0a12;border:1px solid #E91E8C;border-radius:14px;align-items:center;justify-content:space-between">
+    <div style="font-size:13px;color:#E91E8C;font-weight:700">⏱ REST</div>
+    <div id="rest-count" class="pulse" style="font-size:28px;font-weight:900;color:#E91E8C"></div>
+    <button onclick="stopRest()" style="background:none;border:none;color:#888;cursor:pointer;font-family:inherit;font-size:13px">Skip</button>
+  </div>
+  <div class="tabs-scroll" id="ex-tabs"></div>
+  <div style="padding:16px 24px 120px" id="ex-content"></div>
+</div>
+<!-- DONE -->
+<div id="done" class="screen" style="padding:80px 24px 48px;text-align:center">
+  <div style="font-size:64px;margin-bottom:16px">🔥</div>
+  <div class="serif" style="font-size:36px;margin-bottom:8px">Workout <span style="color:#E91E8C;font-style:italic">Complete!</span></div>
+  <div id="done-subtitle" style="color:#888;font-size:15px;margin-bottom:40px"></div>
+  <div style="display:flex;gap:12px;justify-content:center;margin-bottom:40px">
+    <div style="padding:20px 24px;background:#1A1A1A;border-radius:18px;text-align:center">
+      <div id="done-sets" style="font-size:32px;font-weight:900;color:#E91E8C"></div>
+      <div style="font-size:12px;color:#888">sets done</div>
+    </div>
+    <div style="padding:20px 24px;background:#1A1A1A;border-radius:18px;text-align:center">
+      <div id="done-reps" style="font-size:32px;font-weight:900;color:#E91E8C"></div>
+      <div style="font-size:12px;color:#888">total reps</div>
+    </div>
+  </div>
+  <div id="done-summary" style="text-align:left;margin-bottom:40px"></div>
+  <button class="btn-pink" onclick="showScreen('home')">Back to Home</button>
+</div>
+<script>
+const PLAN=[{day:"Day 1",title:"Glutes & Hamstrings",emoji:"🍑",color:"#E91E8C",warmup:["5 min incline treadmill walk","Glute bridges — 2×15","Banded clamshells — 2×15 each side","Hip circles — 10 each side","Banded lateral walks — 2×10 each way"],exercises:[{name:"Barbell Hip Thrust",sets:4,reps:"6–8",type:"heavy",note:"Squeeze & hold 1s at top"},{name:"Romanian Deadlift",sets:4,reps:"6–8",type:"heavy",note:"Slow eccentric, feel the stretch"},{name:"Cable Kickback Circuit",sets:3,reps:"15 each",type:"light",note:"Standing → Donkey → Lateral → Diagonal"},{name:"Lying Leg Curl",sets:3,reps:"10–12",type:"moderate"},{name:"Sumo Squat (Dumbbell)",sets:3,reps:"10–12",type:"moderate"},{name:"Hyperextension",sets:3,reps:"15–20",type:"light",note:"Slow & controlled — lower back sculpt"}]},{day:"Day 2",title:"Arms & Shoulders",emoji:"💪",color:"#C2185B",warmup:["5 min bike or rowing machine","Arm circles — 10 each direction","Cat-cow — 10 reps","Leg swings — 10 each side","Band pull-aparts — 15"],exercises:[{name:"Lateral Raise",sets:3,reps:"15–20",type:"light",note:"Round shoulder shape"},{name:"Face Pulls",sets:3,reps:"15–20",type:"light",note:"3D shoulders + posture"},{name:"Rear Delt Cable Fly",sets:3,reps:"15–20",type:"light"},{name:"Cable Bicep Curl",sets:3,reps:"10–12",type:"moderate",note:"Constant tension"},{name:"Skull Crushers",sets:3,reps:"10–12",type:"moderate"},{name:"Tricep Rope Pushdown",sets:3,reps:"10–12",type:"moderate"},{name:"Pallof Press",sets:3,reps:"15 each",type:"light",note:"Waist definition"}]},{day:"Day 3",title:"Glutes & Quads",emoji:"🦵",color:"#AD1457",warmup:["5 min incline treadmill walk","Bodyweight squats — 15","Banded clamshells — 2×15","Hip circles — 10 each side","Banded lateral walks — 2×10"],exercises:[{name:"Bulgarian Split Squat",sets:4,reps:"6–8",type:"heavy",note:"Each leg — drive through heel"},{name:"Barbell Back Squat",sets:4,reps:"6–8",type:"heavy"},{name:"Leg Press (Feet High & Wide)",sets:3,reps:"10–12",type:"moderate",note:"Glute focused position"},{name:"Leg Extension",sets:3,reps:"15–20",type:"light"},{name:"Abductor Machine",sets:3,reps:"15–20",type:"light",note:"Hip width + side glute shape"},{name:"Plank",sets:3,reps:"45 sec",type:"light"}]},{day:"Day 4",title:"Back, Core & Lower Back",emoji:"🔥",color:"#880E4F",warmup:["5 min rowing machine","Cat-cow — 10 reps","Leg swings — 10 each side","Band pull-aparts — 15","Dead hangs — 2×20s"],exercises:[{name:"Lat Pulldown",sets:4,reps:"6–8",type:"heavy",note:"V-taper = smaller waist"},{name:"Seated Cable Row",sets:4,reps:"6–8",type:"heavy"},{name:"Single-Arm Dumbbell Row",sets:4,reps:"6–8",type:"heavy",note:"Each arm"},{name:"Hyperextension with Rotation",sets:3,reps:"15–20",type:"light",note:"Lower back + obliques sculpt"},{name:"Cable Woodchop",sets:3,reps:"15 each",type:"light"},{name:"Hanging Leg Raise",sets:3,reps:"10–12",type:"moderate"},{name:"Ab Wheel Rollout",sets:3,reps:"10–12",type:"moderate"}]}];
+const TYPE_COLOR={heavy:"#E91E8C",moderate:"#FF6B9D",light:"#FFB3D1"};
+const TYPE_LABEL={heavy:"HEAVY",moderate:"MODERATE",light:"LIGHT"};
+let activeDay=0,activeEx=0,log=[],restInterval=null,restSeconds=0;
+function buildLog(d){return PLAN[d].exercises.map(ex=>({sets:Array.from({length:ex.sets},()=>({weight:"",reps:"",done:false}))}))}
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0)}
+function startDay(idx){activeDay=idx;activeEx=0;log=buildLog(idx);const d=PLAN[idx];document.getElementById('wu-tag').textContent=d.day.toUpperCase();document.getElementById('wu-tag').style.color=d.color;document.getElementById('wu-title').textContent=d.title;const wuList=document.getElementById('wu-list');wuList.innerHTML=d.warmup.map((w,i)=>`<div style="display:flex;align-items:center;gap:14px;padding:14px 18px;background:#1A1A1A;border-radius:14px"><div style="width:28px;height:28px;border-radius:50%;background:${d.color}33;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:${d.color};flex-shrink:0">${i+1}</div><div style="font-size:15px">${w}</div></div>`).join('');showScreen('warmup')}
+function startWorkout(){const d=PLAN[activeDay];document.getElementById('wk-tag').textContent=d.day.toUpperCase();document.getElementById('wk-tag').style.color=d.color;document.getElementById('wk-title').textContent=d.title;renderTabs();renderExercise();updateProgress();showScreen('workout')}
+function renderTabs(){const d=PLAN[activeDay];document.getElementById('ex-tabs').innerHTML=d.exercises.map((ex,i)=>{const exLog=log[i];const done=exLog.sets.every(s=>s.done);const started=exLog.sets.some(s=>s.done);let cls='ex-tab';if(i===activeEx)cls+=' active';if(done)cls+=' completed';else if(started)cls+=' started';const style=i===activeEx?`background:${d.color};border-color:${d.color}`:'';return`<button class="${cls}" style="${style}" onclick="switchEx(${i})">${done?'✓ ':''}${i+1}. ${ex.name.split(' ').slice(0,2).join(' ')}</button>`}).join('')}
+function renderExercise(){const d=PLAN[activeDay];const ex=d.exercises[activeEx];const exLog=log[activeEx];const c=d.color;const setsHTML=exLog.sets.map((s,si)=>`<div class="set-row${s.done?' done-row':''}" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:#1A1A1A;border-radius:14px;border:1px solid ${s.done?'#1a1a1a':'#2a2a2a'}"><div style="width:30px;height:30px;border-radius:50%;background:${s.done?'#222':c+'22'};display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:${s.done?'#444':c};flex-shrink:0">${si+1}</div><input class="inp" type="number" placeholder="kg" value="${s.weight}" oninput="updateSet(${activeEx},${si},'weight',this.value)" style="min-width:0"/><input class="inp" type="number" placeholder="reps" value="${s.reps}" oninput="updateSet(${activeEx},${si},'reps',this.value)" style="min-width:0"/><button class="done-btn${s.done?' checked':''}" onclick="toggleDone(${activeEx},${si})">${s.done?'✓':''}</button></div>`).join('');const isLast=activeEx===d.exercises.length-1;document.getElementById('ex-content').innerHTML=`<div style="margin-bottom:20px"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><div class="type-badge" style="background:${TYPE_COLOR[ex.type]}22;color:${TYPE_COLOR[ex.type]}">${TYPE_LABEL[ex.type]}</div><div style="font-size:12px;color:#888">${ex.sets} sets × ${ex.reps} reps</div></div><div style="font-size:22px;font-weight:800;margin-bottom:4px">${ex.name}</div>${ex.note?`<div style="font-size:13px;color:#888;font-style:italic">💡 ${ex.note}</div>`:''}</div><div style="display:flex;gap:8px;padding:0 4px;margin-bottom:10px"><div style="width:30px;font-size:11px;color:#444;font-weight:700;text-align:center">SET</div><div style="flex:1;font-size:11px;color:#444;font-weight:700;text-align:center">WEIGHT</div><div style="flex:1;font-size:11px;color:#444;font-weight:700;text-align:center">REPS</div><div style="width:38px"></div></div><div style="display:flex;flex-direction:column;gap:8px">${setsHTML}</div><div style="display:flex;gap:10px;margin-top:24px">${activeEx>0?`<button class="btn-ghost" onclick="switchEx(${activeEx-1})">← Prev</button>`:''} ${isLast?`<button class="btn-pink" onclick="finishWorkout()">Finish Workout 🎉</button>`:`<button class="btn-pink" style="${activeEx>0?'flex:2':''}" onclick="switchEx(${activeEx+1})">Next Exercise →</button>`}</div>`}
+function switchEx(idx){activeEx=idx;renderTabs();renderExercise();document.getElementById('ex-content').scrollIntoView({behavior:'smooth',block:'nearest'})}
+function updateSet(exIdx,setIdx,field,val){log[exIdx].sets[setIdx][field]=val}
+function toggleDone(exIdx,setIdx){log[exIdx].sets[setIdx].done=!log[exIdx].sets[setIdx].done;renderTabs();renderExercise();updateProgress();if(log[exIdx].sets[setIdx].done)startRest(90)}
+function updateProgress(){const d=PLAN[activeDay];const total=d.exercises.reduce((a,e)=>a+e.sets,0);const done=log.reduce((a,ex)=>a+ex.sets.filter(s=>s.done).length,0);document.getElementById('wk-progress-label').textContent=`${done}/${total}`;document.getElementById('progress-bar').style.width=`${(done/total)*100}%`}
+function startRest(secs){stopRest();restSeconds=secs;const el=document.getElementById('rest-timer');el.style.display='flex';document.getElementById('rest-count').textContent=restSeconds+'s';restInterval=setInterval(()=>{restSeconds--;if(restSeconds<=0){stopRest();return}document.getElementById('rest-count').textContent=restSeconds+'s'},1000)}
+function stopRest(){clearInterval(restInterval);restInterval=null;document.getElementById('rest-timer').style.display='none'}
+function finishWorkout(){stopRest();const d=PLAN[activeDay];const done=log.reduce((a,ex)=>a+ex.sets.filter(s=>s.done).length,0);const totalReps=log.reduce((a,ex)=>a+ex.sets.filter(s=>s.reps).reduce((b,s)=>b+Number(s.reps||0),0),0);document.getElementById('done-subtitle').textContent=`${d.day} — ${d.title}`;document.getElementById('done-sets').textContent=done;document.getElementById('done-reps').textContent=totalReps;document.getElementById('done-summary').innerHTML=`<div style="font-size:12px;font-weight:700;color:#888;letter-spacing:1px;margin-bottom:12px">SESSION SUMMARY</div>`+d.exercises.map((ex,i)=>{const sl=log[i].sets.filter(s=>s.done&&(s.weight||s.reps));if(!sl.length)return'';return`<div style="padding:14px 16px;background:#1A1A1A;border-radius:14px;margin-bottom:8px"><div style="font-size:14px;font-weight:700;margin-bottom:8px">${ex.name}</div><div style="display:flex;gap:6px;flex-wrap:wrap">${sl.map((s,si)=>`<div style="padding:3px 10px;background:#252525;border-radius:8px;font-size:12px;color:#888">Set ${si+1}: ${s.weight?s.weight+'kg':'—'} × ${s.reps||'—'}</div>`).join('')}</div></div>`}).join('');showScreen('done')}
+const list=document.getElementById('day-list');PLAN.forEach((d,i)=>{const btn=document.createElement('button');btn.className='day-card';btn.innerHTML=`<div style="width:52px;height:52px;border-radius:16px;background:${d.color}22;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0">${d.emoji}</div><div style="flex:1"><div style="font-size:11px;font-weight:700;color:${d.color};letter-spacing:1.5px;margin-bottom:3px">${d.day.toUpperCase()}</div><div style="font-size:17px;font-weight:700;color:#fff">${d.title}</div><div style="font-size:13px;color:#888;margin-top:2px">${d.exercises.length} exercises</div></div><div style="color:#444;font-size:22px">›</div>`;btn.addEventListener('mouseenter',()=>btn.style.borderColor=d.color);btn.addEventListener('mouseleave',()=>btn.style.borderColor='#2a2a2a');btn.onclick=()=>startDay(i);list.appendChild(btn)});
+</script>
+</body>
+</html>
