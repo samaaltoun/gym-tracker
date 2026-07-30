@@ -7,24 +7,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="theme-color" content="#E91E8C"/>
 <title>Gym</title>
-<script>
-window.addEventListener('DOMContentLoaded',function(){
-  var c=document.createElement('canvas');
-  c.width=180;c.height=180;
-  var ctx=c.getContext('2d');
-  var g=ctx.createLinearGradient(0,0,180,180);
-  g.addColorStop(0,'#E91E8C');g.addColorStop(1,'#880E4F');
-  ctx.fillStyle=g;
-  ctx.beginPath();ctx.moveTo(36,0);ctx.lineTo(144,0);ctx.quadraticCurveTo(180,0,180,36);ctx.lineTo(180,144);ctx.quadraticCurveTo(180,180,144,180);ctx.lineTo(36,180);ctx.quadraticCurveTo(0,180,0,144);ctx.lineTo(0,36);ctx.quadraticCurveTo(0,0,36,0);ctx.closePath();ctx.fill();
-  ctx.fillStyle='#fff';
-  ctx.font='bold 68px -apple-system,sans-serif';
-  ctx.textAlign='center';ctx.textBaseline='middle';
-  ctx.fillText('GYM',90,90);
-  var link=document.createElement('link');
-  link.rel='apple-touch-icon';link.href=c.toDataURL('image/png');
-  document.head.appendChild(link);
-});
-</script>
+<link rel="apple-touch-icon" href="data:image/png;base64,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"/>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700;900&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet"/>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
@@ -193,47 +176,44 @@ input[type=number]{-moz-appearance:textfield}
 
 <script>
 const PLAN=[
-  {day:"Day 1",title:"Glutes & Hamstrings",emoji:"🍑",color:"#E91E8C",
-   warmup:["5 min incline treadmill walk","Glute bridges — 2×15","Banded clamshells — 2×15 each side","Hip circles — 10 each side","Banded lateral walks — 2×10 each way"],
+  {day:"Day 1",title:"Quads & Lower Glutes",emoji:"🦵",color:"#E91E8C",
+   warmup:["5 min incline treadmill walk","Bodyweight squats — 15","Banded clamshells — 2×15 each side","Hip circles — 10 each side","Banded lateral walks — 2×10 each way"],
    exercises:[
-    {name:"Barbell Hip Thrust",sets:4,reps:"6–8",type:"heavy",note:"Squeeze & hold 1s at top"},
-    {name:"Romanian Deadlift",sets:4,reps:"6–8",type:"heavy",note:"Slow eccentric, feel the stretch"},
-    {name:"Cable Kickback Circuit",sets:3,reps:"15 each",type:"light",note:"Standing → Donkey → Lateral → Diagonal"},
-    {name:"Lying Leg Curl",sets:3,reps:"10–12",type:"moderate"},
-    {name:"Sumo Squat (Dumbbell)",sets:3,reps:"10–12",type:"moderate"},
-    {name:"Hyperextension",sets:3,reps:"15–20",type:"light",note:"Slow & controlled"},
+    {name:"Barbell Back Squat",sets:4,reps:"6–8",type:"heavy",note:"Drive through heels, chest up, full depth"},
+    {name:"Bulgarian Split Squat",sets:3,reps:"8–10",type:"heavy",note:"Wide step, lean torso slightly forward to shift weight out of quads and into glutes. Drive through heel at the top."},
+    {name:"Leg Extension",sets:3,reps:"15–20",type:"light",note:"Quad isolation — slow and controlled"},
+    {name:"Adductor Machine",sets:3,reps:"15–20",type:"light",note:"Inner thigh — full range of motion"},
+    {name:"Cable Kickback — Straight Back",sets:3,reps:"12",type:"moderate",note:"Kick straight back with toes pointed slightly outward to hit gluteus maximus. Keep hips square, slow and controlled."},
   ]},
-  {day:"Day 2",title:"Arms & Shoulders",emoji:"💪",color:"#C2185B",
-   warmup:["5 min bike or rowing machine","Arm circles — 10 each direction","Cat-cow — 10 reps","Leg swings — 10 each side","Band pull-aparts — 15"],
+  {day:"Day 2",title:"Push — Chest, Shoulders & Triceps",emoji:"💪",color:"#C2185B",
+   warmup:["5 min bike or rowing machine","Arm circles — 10 each direction","Band pull-aparts — 15","Cat-cow — 10 reps","Chest stretch — 30s each side"],
    exercises:[
-    {name:"Lateral Raise",sets:3,reps:"15–20",type:"light",note:"Round shoulder shape"},
-    {name:"Face Pulls",sets:3,reps:"15–20",type:"light",note:"3D shoulders + posture"},
-    {name:"Rear Delt Cable Fly",sets:3,reps:"15–20",type:"light"},
-    {name:"Cable Bicep Curl",sets:3,reps:"10–12",type:"moderate",note:"Constant tension"},
-    {name:"Skull Crushers",sets:3,reps:"10–12",type:"moderate"},
-    {name:"Tricep Rope Pushdown",sets:3,reps:"10–12",type:"moderate"},
-    {name:"Pallof Press",sets:3,reps:"15 each",type:"light",note:"Waist definition"},
+    {name:"Incline Dumbbell Press",sets:3,reps:"8–10",type:"heavy",note:"Targets upper chest — creates lifted appearance. Control the descent."},
+    {name:"Chest Fly on Bench",sets:3,reps:"12",type:"moderate",note:"Wide arc, slight bend in elbows. Stretch at bottom, squeeze at top."},
+    {name:"Shoulder Press",sets:3,reps:"10–12",type:"moderate",note:"Full range of motion — don't lock out at top"},
+    {name:"Lateral Raise",sets:3,reps:"15–20",type:"light",note:"Builds round shoulder shape — slight forward lean, lead with elbows"},
+    {name:"Tricep Rope Pushdown",sets:3,reps:"12",type:"moderate",note:"Spread the rope at the bottom, squeeze triceps"},
+    {name:"Skull Crushers",sets:3,reps:"10–12",type:"moderate",note:"Lower slowly to forehead, explode up"},
   ]},
-  {day:"Day 3",title:"Glutes & Quads",emoji:"🦵",color:"#AD1457",
-   warmup:["5 min incline treadmill walk","Bodyweight squats — 15","Banded clamshells — 2×15","Hip circles — 10 each side","Banded lateral walks — 2×10"],
+  {day:"Day 3",title:"Pull — Back, Biceps & Rear Delts",emoji:"🔥",color:"#AD1457",
+   warmup:["5 min rowing machine","Band pull-aparts — 15","Dead hangs — 2×20s","Cat-cow — 10 reps","Leg swings — 10 each side"],
    exercises:[
-    {name:"Bulgarian Split Squat",sets:4,reps:"6–8",type:"heavy",note:"Each leg — drive through heel"},
-    {name:"Barbell Back Squat",sets:4,reps:"6–8",type:"heavy"},
-    {name:"Leg Press (Feet High & Wide)",sets:3,reps:"10–12",type:"moderate",note:"Glute focused"},
-    {name:"Leg Extension",sets:3,reps:"15–20",type:"light"},
-    {name:"Abductor Machine",sets:3,reps:"15–20",type:"light",note:"Hip width + side glutes"},
-    {name:"Plank",sets:3,reps:"45 sec",type:"light"},
+    {name:"Lat Pulldown",sets:3,reps:"6–8",type:"heavy",note:"V-taper = smaller waist. Lean back slightly, pull to upper chest."},
+    {name:"Seated Cable Row",sets:3,reps:"6–8",type:"heavy",note:"Sit tall, squeeze shoulder blades together at the end"},
+    {name:"Single-Arm Dumbbell Row",sets:3,reps:"8–10",type:"heavy",note:"Each arm. Full stretch at bottom, elbow drives back and up."},
+    {name:"Face Pulls",sets:3,reps:"15–20",type:"light",note:"3D shoulders + posture. Pull to forehead, elbows high."},
+    {name:"Reverse Dumbbell Fly",sets:3,reps:"15",type:"light",note:"Hinge forward, arms out to sides. Squeeze rear delts at top — don't shrug."},
+    {name:"Hyperextension — Lower Back",sets:3,reps:"12–15",type:"moderate",note:"Feet parallel, toes forward. Keep back flat and neutral. Drive up using lower back erectors. Squeeze at the top."},
   ]},
-  {day:"Day 4",title:"Back, Core & Lower Back",emoji:"🔥",color:"#880E4F",
-   warmup:["5 min rowing machine","Cat-cow — 10 reps","Leg swings — 10 each side","Band pull-aparts — 15","Dead hangs — 2×20s"],
+  {day:"Day 4",title:"Hamstrings & Upper Glutes",emoji:"🍑",color:"#880E4F",
+   warmup:["5 min incline treadmill walk","Glute bridges — 2×15","Banded clamshells — 2×15 each side","Hip circles — 10 each side","Banded lateral walks — 2×10"],
    exercises:[
-    {name:"Lat Pulldown",sets:4,reps:"6–8",type:"heavy",note:"V-taper = smaller waist"},
-    {name:"Seated Cable Row",sets:4,reps:"6–8",type:"heavy"},
-    {name:"Single-Arm Dumbbell Row",sets:4,reps:"6–8",type:"heavy",note:"Each arm"},
-    {name:"Hyperextension with Rotation",sets:3,reps:"15–20",type:"light",note:"Lower back + obliques"},
-    {name:"Cable Woodchop",sets:3,reps:"15 each",type:"light"},
-    {name:"Hanging Leg Raise",sets:3,reps:"10–12",type:"moderate"},
-    {name:"Ab Wheel Rollout",sets:3,reps:"10–12",type:"moderate"},
+    {name:"Deadlift",sets:4,reps:"5–7",type:"heavy",note:"Heavy compound for overall hamstring and glute thickness. Hinge at hips, flat back."},
+    {name:"Barbell Hip Thrust",sets:4,reps:"8–10",type:"heavy",note:"Squeeze & hold at top for 1 second. Drive through heels, chin tucked."},
+    {name:"Lying Leg Curl",sets:3,reps:"10–12",type:"moderate",note:"Hamstring isolation. Full range, slow eccentric."},
+    {name:"Hyperextension — Glute Biased",sets:3,reps:"12–15",type:"moderate",note:"Toes out 45°, round upper back like a cat. Drive up by squeezing glutes only — not lower back. Hips just off the pad. Hold squeeze 1 second at top."},
+    {name:"Abductor Machine",sets:3,reps:"15–20",type:"light",note:"Targets gluteus medius — widens and rounds upper hip profile"},
+    {name:"Cable Kickback — 45° Angle",sets:3,reps:"12–15",type:"moderate",note:"Kick out and back at a 45-degree angle to isolate upper side glutes. Don't rotate your hip — keep it controlled."},
   ]},
 ];
 
@@ -565,6 +545,129 @@ PLAN.forEach((d,i)=>{
   btn.onclick=()=>startDay(i);
   list.appendChild(btn);
 });
+
+// Add core section
+const coreSection=document.getElementById('day-list');
+const coreDivider=document.createElement('div');
+coreDivider.innerHTML=`<div style="font-size:11px;font-weight:700;color:#555;letter-spacing:1.5px;margin:8px 0 4px">OPTIONAL</div>`;
+coreSection.appendChild(coreDivider);
+
+const CORE=[
+  {name:"Hanging Leg Raise",sets:3,reps:"12",type:"moderate",note:"Lower abs — keep controlled, don't swing"},
+  {name:"Ab Wheel Rollout",sets:3,reps:"10",type:"moderate",note:"Full core — slow rollout, squeeze back up"},
+  {name:"Pallof Press with Twist",sets:3,reps:"12 each",type:"light",note:"Obliques + deep core. Press out, twist away from cable, return controlled."},
+  {name:"Cocoons with Weight",sets:3,reps:"12",type:"moderate",note:"Upper + lower abs together. Hold weight at chest, tuck knees in as you crunch up."},
+  {name:"Hip Lift",sets:3,reps:"15",type:"light",note:"Lower abs. Lie flat, legs straight up, lift hips off floor using lower abs — not momentum."},
+];
+
+const coreBtn=document.createElement('button');
+coreBtn.className='day-card';
+coreBtn.style.borderColor='#333';
+coreBtn.innerHTML=`
+  <div style="width:52px;height:52px;border-radius:16px;background:#ffffff11;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0">🔩</div>
+  <div style="flex:1">
+    <div style="font-size:11px;font-weight:700;color:#aaa;letter-spacing:1.5px;margin-bottom:3px">CORE</div>
+    <div style="font-size:17px;font-weight:700;color:#fff">Core & Abs</div>
+    <div style="font-size:13px;color:#888;margin-top:2px">5 exercises · Add to any session</div>
+  </div>
+  <div style="color:#444;font-size:22px">›</div>`;
+coreBtn.addEventListener('mouseenter',()=>coreBtn.style.borderColor='#aaa');
+coreBtn.addEventListener('mouseleave',()=>coreBtn.style.borderColor='#333');
+coreBtn.onclick=()=>startCore();
+coreSection.appendChild(coreBtn);
+
+function startCore(){
+  activeDay=-1;
+  activeEx=0;
+  log=[{sets:Array.from({length:3},()=>({weight:"",reps:"",done:false}))},
+       {sets:Array.from({length:3},()=>({weight:"",reps:"",done:false}))},
+       {sets:Array.from({length:3},()=>({weight:"",reps:"",done:false}))},
+       {sets:Array.from({length:3},()=>({weight:"",reps:"",done:false}))},
+       {sets:Array.from({length:3},()=>({weight:"",reps:"",done:false}))}];
+  document.getElementById('wu-tag').textContent='CORE';
+  document.getElementById('wu-tag').style.color='#aaa';
+  document.getElementById('wu-title').textContent='Core & Abs';
+  document.getElementById('wu-list').innerHTML=[
+    "Dead bug — 10 reps each side",
+    "Cat-cow — 10 reps",
+    "Leg swings — 10 each side",
+    "Hollow body hold — 20s"
+  ].map((w,i)=>`
+    <div style="display:flex;align-items:center;gap:14px;padding:14px 18px;background:#1A1A1A;border-radius:14px">
+      <div style="width:28px;height:28px;border-radius:50%;background:#ffffff22;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#aaa;flex-shrink:0">${i+1}</div>
+      <div style="font-size:15px">${w}</div>
+    </div>`).join('');
+  showScreen('warmup');
+}
+
+// Override renderExercise and renderTabs for core
+const _origRenderTabs=renderTabs;
+const _origRenderExercise=renderExercise;
+
+function renderTabs(){
+  if(activeDay===-1){
+    document.getElementById('ex-tabs').innerHTML=CORE.map((ex,i)=>{
+      const exLog=log[i];
+      const done=exLog.sets.every(s=>s.done);
+      const started=exLog.sets.some(s=>s.done);
+      let cls='ex-tab';
+      if(i===activeEx)cls+=' active';
+      if(done)cls+=' completed';else if(started)cls+=' started';
+      const style=i===activeEx?`background:#888;border-color:#888`:'';
+      return`<button class="${cls}" style="${style}" onclick="switchEx(${i})">${done?'✓ ':''}${i+1}. ${ex.name.split(' ').slice(0,2).join(' ')}</button>`;
+    }).join('');
+    return;
+  }
+  _origRenderTabs();
+}
+
+function renderExercise(){
+  if(activeDay===-1){
+    const ex=CORE[activeEx];const exLog=log[activeEx];
+    document.getElementById('wk-tag').textContent='CORE';
+    document.getElementById('wk-tag').style.color='#aaa';
+    document.getElementById('wk-title').textContent='Core & Abs';
+    const TYPE_COLOR_LOCAL={heavy:"#E91E8C",moderate:"#FF6B9D",light:"#FFB3D1"};
+    const setsHTML=exLog.sets.map((s,si)=>`
+      <div class="set-row${s.done?' done-row':''}" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:#1A1A1A;border-radius:14px;border:1px solid ${s.done?'#1a1a1a':'#2a2a2a'}">
+        <div style="width:30px;height:30px;border-radius:50%;background:${s.done?'#222':'#ffffff22'};display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:${s.done?'#444':'#aaa'};flex-shrink:0">${si+1}</div>
+        <input class="inp" type="number" placeholder="kg" value="${s.weight}" oninput="updateSet(${activeEx},${si},'weight',this.value)" style="min-width:0"/>
+        <input class="inp" type="number" placeholder="reps" value="${s.reps}" oninput="updateSet(${activeEx},${si},'reps',this.value)" style="min-width:0"/>
+        <button class="done-btn${s.done?' checked':''}" onclick="toggleDone(${activeEx},${si})">${s.done?'✓':''}</button>
+      </div>`).join('');
+    const isLast=activeEx===CORE.length-1;
+    document.getElementById('ex-content').innerHTML=`
+      <div style="margin-bottom:20px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <div class="type-badge" style="background:${TYPE_COLOR_LOCAL[ex.type]}22;color:${TYPE_COLOR_LOCAL[ex.type]}">${ex.type.toUpperCase()}</div>
+          <div style="font-size:12px;color:#888">${ex.sets} sets × ${ex.reps} reps</div>
+        </div>
+        <div style="font-size:22px;font-weight:800;margin-bottom:4px">${ex.name}</div>
+        ${ex.note?`<div style="font-size:13px;color:#888;font-style:italic">💡 ${ex.note}</div>`:''}
+      </div>
+      <div style="display:flex;gap:8px;padding:0 4px;margin-bottom:10px">
+        <div style="width:30px;font-size:11px;color:#444;font-weight:700;text-align:center">SET</div>
+        <div style="flex:1;font-size:11px;color:#444;font-weight:700;text-align:center">WEIGHT</div>
+        <div style="flex:1;font-size:11px;color:#444;font-weight:700;text-align:center">REPS</div>
+        <div style="width:38px"></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px">${setsHTML}</div>
+      <div style="display:flex;gap:10px;margin-top:24px">
+        ${activeEx>0?`<button class="btn-ghost" onclick="switchEx(${activeEx-1})">← Prev</button>`:''}
+        ${isLast?`<button class="btn-pink" style="${activeEx>0?'flex:2':''}" onclick="finishWorkout()">Finish Core 🔥</button>`:`<button class="btn-pink" style="${activeEx>0?'flex:2':''}" onclick="switchEx(${activeEx+1})">Next Exercise →</button>`}
+      </div>`;
+    updateCoreProgress();
+    return;
+  }
+  _origRenderExercise();
+}
+
+function updateCoreProgress(){
+  const total=CORE.reduce((a,e)=>a+e.sets,0);
+  const done=log.reduce((a,ex)=>a+ex.sets.filter(s=>s.done).length,0);
+  document.getElementById('wk-progress-label').textContent=`${done}/${total}`;
+  document.getElementById('progress-bar').style.width=`${(done/total)*100}%`;
+}
 </script>
 </body>
 </html>
