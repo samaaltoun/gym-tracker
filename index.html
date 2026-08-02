@@ -82,7 +82,7 @@ input[type=number]{-moz-appearance:textfield}
   <div class="serif" id="wu-title" style="font-size:30px;margin-bottom:6px"></div>
   <div style="color:#888;font-size:14px;margin-bottom:32px">Activate before you lift 🔥</div>
   <div id="wu-list" style="display:flex;flex-direction:column;gap:10px;margin-bottom:36px"></div>
-  <button class="btn-pink" onclick="startWorkout()">Start Workout →</button>
+  <button class="btn-pink" onclick="activeDay===-1?startCoreWorkout():startWorkout()">Start Workout →</button>
 </div>
 
 <!-- WORKOUT -->
@@ -233,10 +233,54 @@ function showScreen(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   window.scrollTo(0,0);
-  // update nav
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-  if(id==='home')document.getElementById('nav-home').classList.add('active');
+  if(id==='home'){
+    document.getElementById('nav-home').classList.add('active');
+    checkResumeBanner();
+  }
   if(id==='history'){document.getElementById('nav-history').classList.add('active');renderHistory();}
+  if(id==='workout'){renderTabs();renderExercise();if(activeDay===-1)updateCoreProgress();else updateProgress();}
+}
+
+function checkResumeBanner(){
+  const existing=document.getElementById('resume-banner');
+  if(existing)existing.remove();
+  try{
+    const saved=localStorage.getItem('gym_in_progress');
+    if(!saved)return;
+    const data=JSON.parse(saved);
+    const dayName=data.activeDay===-1?'Core & Abs':(PLAN[data.activeDay]?.day+' — '+PLAN[data.activeDay]?.title);
+    const banner=document.createElement('div');
+    banner.id='resume-banner';
+    banner.style.cssText='background:#1a0a12;border:1px solid #E91E8C;border-radius:14px;padding:14px 18px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;gap:10px;';
+    banner.innerHTML=`
+      <div>
+        <div style="font-size:11px;font-weight:700;color:#E91E8C;letter-spacing:1px;margin-bottom:2px">IN PROGRESS</div>
+        <div style="font-size:14px;font-weight:700">${dayName}</div>
+      </div>
+      <button onclick="resumeWorkout()" style="background:#E91E8C;color:#fff;border:none;border-radius:10px;padding:8px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;flex-shrink:0">Resume →</button>`;
+    document.getElementById('day-list').before(banner);
+  }catch(e){}
+}
+
+function resumeWorkout(){
+  try{
+    const data=JSON.parse(localStorage.getItem('gym_in_progress'));
+    activeDay=data.activeDay;
+    activeEx=data.activeEx;
+    log=data.log;
+    if(activeDay===-1){
+      document.getElementById('wk-tag').textContent='CORE';
+      document.getElementById('wk-tag').style.color='#aaa';
+      document.getElementById('wk-title').textContent='Core & Abs';
+    } else {
+      const d=PLAN[activeDay];
+      document.getElementById('wk-tag').textContent=d.day.toUpperCase();
+      document.getElementById('wk-tag').style.color=d.color;
+      document.getElementById('wk-title').textContent=d.title;
+    }
+    showScreen('workout');
+  }catch(e){}
 }
 
 function navTo(id){
@@ -263,66 +307,35 @@ function startWorkout(){
   document.getElementById('wk-tag').textContent=d.day.toUpperCase();
   document.getElementById('wk-tag').style.color=d.color;
   document.getElementById('wk-title').textContent=d.title;
+  saveProgress();
   renderTabs();renderExercise();updateProgress();
   showScreen('workout');
 }
 
-function renderTabs(){
-  const d=PLAN[activeDay];
-  document.getElementById('ex-tabs').innerHTML=d.exercises.map((ex,i)=>{
-    const exLog=log[i];
-    const done=exLog.sets.every(s=>s.done);
-    const started=exLog.sets.some(s=>s.done);
-    let cls='ex-tab';
-    if(i===activeEx)cls+=' active';
-    if(done)cls+=' completed';else if(started)cls+=' started';
-    const style=i===activeEx?`background:${d.color};border-color:${d.color}`:'';
-    return`<button class="${cls}" style="${style}" onclick="switchEx(${i})">${done?'✓ ':''}${i+1}. ${ex.name.split(' ').slice(0,2).join(' ')}</button>`;
-  }).join('');
-}
-
-function renderExercise(){
-  const d=PLAN[activeDay];const ex=d.exercises[activeEx];const exLog=log[activeEx];const c=d.color;
-  const setsHTML=exLog.sets.map((s,si)=>`
-    <div class="set-row${s.done?' done-row':''}" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:#1A1A1A;border-radius:14px;border:1px solid ${s.done?'#1a1a1a':'#2a2a2a'}">
-      <div style="width:30px;height:30px;border-radius:50%;background:${s.done?'#222':c+'22'};display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:${s.done?'#444':c};flex-shrink:0">${si+1}</div>
-      <input class="inp" type="number" placeholder="kg" value="${s.weight}" oninput="updateSet(${activeEx},${si},'weight',this.value)" style="min-width:0"/>
-      <input class="inp" type="number" placeholder="reps" value="${s.reps}" oninput="updateSet(${activeEx},${si},'reps',this.value)" style="min-width:0"/>
-      <button class="done-btn${s.done?' checked':''}" onclick="toggleDone(${activeEx},${si})">${s.done?'✓':''}</button>
-    </div>`).join('');
-  const isLast=activeEx===d.exercises.length-1;
-  document.getElementById('ex-content').innerHTML=`
-    <div style="margin-bottom:20px">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-        <div class="type-badge" style="background:${TYPE_COLOR[ex.type]}22;color:${TYPE_COLOR[ex.type]}">${TYPE_LABEL[ex.type]}</div>
-        <div style="font-size:12px;color:#888">${ex.sets} sets × ${ex.reps} reps</div>
-      </div>
-      <div style="font-size:22px;font-weight:800;margin-bottom:4px">${ex.name}</div>
-      ${ex.note?`<div style="font-size:13px;color:#888;font-style:italic">💡 ${ex.note}</div>`:''}
-    </div>
-    <div style="display:flex;gap:8px;padding:0 4px;margin-bottom:10px">
-      <div style="width:30px;font-size:11px;color:#444;font-weight:700;text-align:center">SET</div>
-      <div style="flex:1;font-size:11px;color:#444;font-weight:700;text-align:center">WEIGHT</div>
-      <div style="flex:1;font-size:11px;color:#444;font-weight:700;text-align:center">REPS</div>
-      <div style="width:38px"></div>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:8px">${setsHTML}</div>
-    <div style="display:flex;gap:10px;margin-top:24px">
-      ${activeEx>0?`<button class="btn-ghost" onclick="switchEx(${activeEx-1})">← Prev</button>`:''}
-      ${isLast?`<button class="btn-pink" style="${activeEx>0?'flex:2':''}" onclick="finishWorkout()">Finish Workout 🎉</button>`:`<button class="btn-pink" style="${activeEx>0?'flex:2':''}" onclick="switchEx(${activeEx+1})">Next Exercise →</button>`}
-    </div>`;
-}
-
 function switchEx(idx){activeEx=idx;renderTabs();renderExercise();}
-function updateSet(exIdx,setIdx,field,val){log[exIdx].sets[setIdx][field]=val;}
+
+function saveProgress(){
+  try{localStorage.setItem('gym_in_progress',JSON.stringify({activeDay,activeEx,log}));}catch(e){}
+}
+
+function clearProgress(){
+  localStorage.removeItem('gym_in_progress');
+}
+
+function updateSet(exIdx,setIdx,field,val){
+  log[exIdx].sets[setIdx][field]=val;
+  saveProgress();
+}
 
 function toggleDone(exIdx,setIdx){
   log[exIdx].sets[setIdx].done=!log[exIdx].sets[setIdx].done;
   renderTabs();renderExercise();updateProgress();
-  if(log[exIdx].sets[setIdx].done)startRest(90);
+  saveProgress();
+  if(log[exIdx].sets[setIdx].done)startRest(60);
 }
 
 function updateProgress(){
+  if(activeDay===-1){updateCoreProgress();return;}
   const d=PLAN[activeDay];
   const total=d.exercises.reduce((a,e)=>a+e.sets,0);
   const done=log.reduce((a,ex)=>a+ex.sets.filter(s=>s.done).length,0);
@@ -345,27 +358,22 @@ function stopRest(){clearInterval(restInterval);restInterval=null;document.getEl
 
 function finishWorkout(){
   stopRest();
-  const d=PLAN[activeDay];
+  clearProgress();
+  const isCore=activeDay===-1;
+  const d=isCore?{day:'Core',title:'Core & Abs',exercises:CORE}:PLAN[activeDay];
   const doneSets=log.reduce((a,ex)=>a+ex.sets.filter(s=>s.done).length,0);
   const totalReps=log.reduce((a,ex)=>a+ex.sets.filter(s=>s.reps).reduce((b,s)=>b+Number(s.reps||0),0),0);
   const totalVol=log.reduce((a,ex)=>a+ex.sets.filter(s=>s.done&&s.weight&&s.reps).reduce((b,s)=>b+Number(s.weight||0)*Number(s.reps||0),0),0);
-
-  // Save session
   const session={
-    id: Date.now().toString(),
-    date: new Date().toISOString(),
-    dayIdx: activeDay,
-    dayName: d.day,
-    dayTitle: d.title,
+    id:Date.now().toString(),
+    date:new Date().toISOString(),
+    dayIdx:activeDay,
+    dayName:d.day,
+    dayTitle:d.title,
     doneSets,totalReps,totalVol:Math.round(totalVol),
-    exercises: d.exercises.map((ex,i)=>({
-      name:ex.name,
-      sets:log[i].sets.map(s=>({...s}))
-    }))
+    exercises:d.exercises.map((ex,i)=>({name:ex.name,sets:log[i].sets.map(s=>({...s}))}))
   };
-  const sessions=getSessions();
-  sessions.unshift(session);
-  saveSessions(sessions);
+  const sessions=getSessions();sessions.unshift(session);saveSessions(sessions);
 
   document.getElementById('done-subtitle').textContent=`${d.day} — ${d.title}`;
   document.getElementById('done-sets').textContent=doneSets;
@@ -576,6 +584,14 @@ coreBtn.addEventListener('mouseleave',()=>coreBtn.style.borderColor='#333');
 coreBtn.onclick=()=>startCore();
 coreSection.appendChild(coreBtn);
 
+function startCoreWorkout(){
+  document.getElementById('wk-tag').textContent='CORE';
+  document.getElementById('wk-tag').style.color='#aaa';
+  document.getElementById('wk-title').textContent='Core & Abs';
+  renderTabs();renderExercise();updateCoreProgress();
+  showScreen('workout');
+}
+
 function startCore(){
   activeDay=-1;
   activeEx=0;
@@ -601,9 +617,6 @@ function startCore(){
 }
 
 // Override renderExercise and renderTabs for core
-const _origRenderTabs=renderTabs;
-const _origRenderExercise=renderExercise;
-
 function renderTabs(){
   if(activeDay===-1){
     document.getElementById('ex-tabs').innerHTML=CORE.map((ex,i)=>{
@@ -618,7 +631,18 @@ function renderTabs(){
     }).join('');
     return;
   }
-  _origRenderTabs();
+  // regular day tabs
+  const d=PLAN[activeDay];
+  document.getElementById('ex-tabs').innerHTML=d.exercises.map((ex,i)=>{
+    const exLog=log[i];
+    const done=exLog.sets.every(s=>s.done);
+    const started=exLog.sets.some(s=>s.done);
+    let cls='ex-tab';
+    if(i===activeEx)cls+=' active';
+    if(done)cls+=' completed';else if(started)cls+=' started';
+    const style=i===activeEx?`background:${d.color};border-color:${d.color}`:'';
+    return`<button class="${cls}" style="${style}" onclick="switchEx(${i})">${done?'✓ ':''}${i+1}. ${ex.name.split(' ').slice(0,2).join(' ')}</button>`;
+  }).join('');
 }
 
 function renderExercise(){
@@ -627,7 +651,6 @@ function renderExercise(){
     document.getElementById('wk-tag').textContent='CORE';
     document.getElementById('wk-tag').style.color='#aaa';
     document.getElementById('wk-title').textContent='Core & Abs';
-    const TYPE_COLOR_LOCAL={heavy:"#E91E8C",moderate:"#FF6B9D",light:"#FFB3D1"};
     const setsHTML=exLog.sets.map((s,si)=>`
       <div class="set-row${s.done?' done-row':''}" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:#1A1A1A;border-radius:14px;border:1px solid ${s.done?'#1a1a1a':'#2a2a2a'}">
         <div style="width:30px;height:30px;border-radius:50%;background:${s.done?'#222':'#ffffff22'};display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:${s.done?'#444':'#aaa'};flex-shrink:0">${si+1}</div>
@@ -639,7 +662,7 @@ function renderExercise(){
     document.getElementById('ex-content').innerHTML=`
       <div style="margin-bottom:20px">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-          <div class="type-badge" style="background:${TYPE_COLOR_LOCAL[ex.type]}22;color:${TYPE_COLOR_LOCAL[ex.type]}">${ex.type.toUpperCase()}</div>
+          <div class="type-badge" style="background:${TYPE_COLOR[ex.type]}22;color:${TYPE_COLOR[ex.type]}">${TYPE_LABEL[ex.type]}</div>
           <div style="font-size:12px;color:#888">${ex.sets} sets × ${ex.reps} reps</div>
         </div>
         <div style="font-size:22px;font-weight:800;margin-bottom:4px">${ex.name}</div>
@@ -659,7 +682,36 @@ function renderExercise(){
     updateCoreProgress();
     return;
   }
-  _origRenderExercise();
+  // regular day exercise
+  const d=PLAN[activeDay];const ex=d.exercises[activeEx];const exLog=log[activeEx];const c=d.color;
+  const setsHTML=exLog.sets.map((s,si)=>`
+    <div class="set-row${s.done?' done-row':''}" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:#1A1A1A;border-radius:14px;border:1px solid ${s.done?'#1a1a1a':'#2a2a2a'}">
+      <div style="width:30px;height:30px;border-radius:50%;background:${s.done?'#222':c+'22'};display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:${s.done?'#444':c};flex-shrink:0">${si+1}</div>
+      <input class="inp" type="number" placeholder="kg" value="${s.weight}" oninput="updateSet(${activeEx},${si},'weight',this.value)" style="min-width:0"/>
+      <input class="inp" type="number" placeholder="reps" value="${s.reps}" oninput="updateSet(${activeEx},${si},'reps',this.value)" style="min-width:0"/>
+      <button class="done-btn${s.done?' checked':''}" onclick="toggleDone(${activeEx},${si})">${s.done?'✓':''}</button>
+    </div>`).join('');
+  const isLast=activeEx===d.exercises.length-1;
+  document.getElementById('ex-content').innerHTML=`
+    <div style="margin-bottom:20px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <div class="type-badge" style="background:${TYPE_COLOR[ex.type]}22;color:${TYPE_COLOR[ex.type]}">${TYPE_LABEL[ex.type]}</div>
+        <div style="font-size:12px;color:#888">${ex.sets} sets × ${ex.reps} reps</div>
+      </div>
+      <div style="font-size:22px;font-weight:800;margin-bottom:4px">${ex.name}</div>
+      ${ex.note?`<div style="font-size:13px;color:#888;font-style:italic">💡 ${ex.note}</div>`:''}
+    </div>
+    <div style="display:flex;gap:8px;padding:0 4px;margin-bottom:10px">
+      <div style="width:30px;font-size:11px;color:#444;font-weight:700;text-align:center">SET</div>
+      <div style="flex:1;font-size:11px;color:#444;font-weight:700;text-align:center">WEIGHT</div>
+      <div style="flex:1;font-size:11px;color:#444;font-weight:700;text-align:center">REPS</div>
+      <div style="width:38px"></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px">${setsHTML}</div>
+    <div style="display:flex;gap:10px;margin-top:24px">
+      ${activeEx>0?`<button class="btn-ghost" onclick="switchEx(${activeEx-1})">← Prev</button>`:''}
+      ${isLast?`<button class="btn-pink" style="${activeEx>0?'flex:2':''}" onclick="finishWorkout()">Finish Workout 🎉</button>`:`<button class="btn-pink" style="${activeEx>0?'flex:2':''}" onclick="switchEx(${activeEx+1})">Next Exercise →</button>`}
+    </div>`;
 }
 
 function updateCoreProgress(){
